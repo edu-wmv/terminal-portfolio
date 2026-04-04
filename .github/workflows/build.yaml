@@ -51,7 +51,23 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.RELEASE_TAG }}
           name: "Release ${{ env.RELEASE_TAG }}"
-          draft: true
+          draft: false
           artifacts: |
             build/terminal-portfolio-linux-amd64.tar.gz
             build/terminal-portfolio-linux-arm64.tar.gz
+      
+      - name: Deploy to GCP
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GCP_HOST }}
+          username: ${{ secrets.GCP_USERNAME }}
+          key: ${{ secrets.GCP_KEY }}
+          port: 224
+          script: |
+            sudo systemctl stop portfolio.service
+            rm -rf portfolio
+            mkdir portfolio
+            wget https://github.com/edu-wmv/terminal-portfolio/releases/latest/download/terminal-portfolio-linux-amd64.tar.gz
+            tar -xzf terminal-portfolio.tar.gz -C portfolio
+            chmod +x portfolio/linux-amd64/server
+            sudo systemctl start portfolio.service
