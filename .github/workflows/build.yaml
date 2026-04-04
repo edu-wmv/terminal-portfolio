@@ -43,7 +43,7 @@ jobs:
 
       - name: Generate release tag
         id: generate_tag
-        run: echo "RELEASE_TAG=$(date +'%d-%m-%Y')" >> $GITHUB_ENV
+        run: echo "RELEASE_TAG=$(date +'%d-%m-%Y-%H-%M-%S')" >> $GITHUB_ENV
 
       - name: Create GitHub release
         uses: ncipollo/release-action@v1
