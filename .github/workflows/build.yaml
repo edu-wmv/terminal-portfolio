@@ -69,6 +69,7 @@ jobs:
             rm -rf portfolio
             mkdir portfolio
             wget https://github.com/edu-wmv/terminal-portfolio/releases/latest/download/terminal-portfolio-linux-amd64.tar.gz
-            tar -xzf terminal-portfolio.tar.gz -C portfolio
+            tar -xzf terminal-portfolio-linux-amd64.tar.gz -C portfolio
+            rm -f terminal-portfolio-linux-amd64.tar.gz
             chmod +x portfolio/linux-amd64/server
             sudo systemctl start portfolio.service
