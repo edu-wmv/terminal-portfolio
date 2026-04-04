@@ -61,7 +61,7 @@ jobs:
         with:
           host: ${{ secrets.GCP_HOST }}
           username: ${{ secrets.GCP_USERNAME }}
-          key: ${{ secrets.GCP_KEY }}
+          key: ${{ secrets.GCP_SSH_KEY }}
           port: 224
           script: |
             sudo systemctl stop portfolio.service
