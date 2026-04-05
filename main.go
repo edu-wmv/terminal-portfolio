@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"strings"
 	"syscall"
 	"time"
@@ -24,7 +25,23 @@ import (
 const (
 	host = "0.0.0.0"
 	port = "22"
+
+	envPortfolio = "PORTFOLIO_ENV"
 )
+
+func hostKeyPath() string {
+	switch strings.ToLower(strings.TrimSpace(os.Getenv(envPortfolio))) {
+	case "prod", "production":
+		home, err := os.UserHomeDir()
+		if err != nil {
+			log.Error("Could not resolve home dir for host key", "error", err)
+			return filepath.Join(".", ".ssh", "id_ed25519")
+		}
+		return filepath.Join(home, ".config", "portfolio", "keys", "portfolio_ed25519")
+	default:
+		return filepath.Join(".", ".ssh", "id_ed25519")
+	}
+}
 
 func main() {
 	s, err := wish.NewServer(
@@ -34,6 +51,7 @@ func main() {
 			activeterm.Middleware(),
 			logging.Middleware(),
 		),
+		wish.WithHostKeyPath(hostKeyPath()),
 	)
 
 	if err != nil {
